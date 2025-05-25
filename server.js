@@ -119,6 +119,29 @@ app.post('/api/orders', (req, res) => {
     res.json({ success: true, orderId: order.id });
 });
 
+// Add product to cart
+app.post('/api/cart', (req, res) => {
+    const { productName } = req.body;
+    
+    // Find product case-insensitive
+    const product = products.find(p => 
+        p.name.toLowerCase() === productName.toLowerCase()
+    );
+    
+    if (!product) {
+        return res.status(404).json({ 
+            success: false, 
+            message: 'Product not found' 
+        });
+    }
+    
+    res.json({ 
+        success: true, 
+        product,
+        redirectTo: '/cart.html'
+    });
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
